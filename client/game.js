@@ -1,5 +1,6 @@
+console.log(window.location.pathname);
 var socketPath = window.location.pathname + "socket.io";
-var socket = io({path: socketPath});
+var socket = io();
 
 //Create a div element to store all UI elements
 var ui = document.createElement("div");
@@ -12,10 +13,12 @@ var objects = document.createElement("div");
 objects.id = "objects";
 
 socket.on('newPositions', function(data){       //Create a listener for newPositions packages
-    objects.remove();             //When package is recieved, clear the rectangle
+    gamearea.remove();             //When package is recieved, clear the rectangle
+	document.body.appendChild(gamearea);
+	var gameWindow = new UiWindow("gamewindow", 0,0,"tl", 1000, 1000);
     for(var i = 0; i < data.player.length; i++)     //Loop through all current players
-    	document.createElement("Player")
-        ctx.fillText(data.player[i].number,data.player[i].x,data.player[i].y);  //Create a number in the new x,y positions of current player
+    	gameWindow.addObject(new UiLabel(data.player[i].number, data.player[i].x, data.player[i].y, "tl", "40px sans-serif")); 
+	gamearea.appendChild(objects);
 });
 
 document.onkeydown = function(event) {      //When the following keys are pressed, send a package called keyPress 
